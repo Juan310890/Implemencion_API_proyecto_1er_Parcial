@@ -35,6 +35,7 @@
         <th>Ciudad</th>
         <th>Sede</th>
         <th>Competencia</th>
+        <th>Representante</th>
     </tr>
     <tbody class="table-group-divider">
         {% for deportista in deportistas %}
@@ -49,6 +50,7 @@
                 <td>{{deportista.ciudad}}</td>
                 <td>{{ deportista.sede.nombre }}</td>
                 <td>{{ deportista.competencia.categoria }}</td>
+                <td>{{ deportista.representante.nombre_representante }}</td>
                 <td><a class="btn btn-secondary" href = 'ver_deportista/{{deportista.id}}'><i class="fa-solid fa-eye"></i></a></td>
                 <td><a class="btn btn-success" href = 'editar_deportista/{{deportista.id}}'><i class="fa-solid fa-pencil"></i></a></td>
                 <td><a class="btn btn-danger" href = 'eliminar_deportista/{{deportista.id}}'><i class="fa-solid fa-eraser"></i></a></td>

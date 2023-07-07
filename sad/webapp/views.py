@@ -1,7 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.template import loader
 from deportistas.models import Deportista
+from django.http import HttpResponse
+from django.template import loader
+
+
 # Create your views here.
 def mostrar_deportistas(request):
     cantidad_deportistas = Deportista.objects.count()

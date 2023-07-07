@@ -5,4 +5,5 @@ class DeportistaFormulario(ModelForm):
 
     class Meta:
         model = Deportista
-        fields = ('nombre', 'apellido', 'cedula', 'sexo', 'edad', 'disciplina', 'ciudad', 'sede', 'competencia')
+        fields = ('nombre', 'apellido', 'cedula', 'sexo', 'edad', 'disciplina', 'ciudad', 'sede', 'competencia',
+                  'representante')

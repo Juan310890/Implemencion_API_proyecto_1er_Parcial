@@ -1,8 +1,8 @@
 from django.forms import modelform_factory
 from django.http import HttpResponse
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
-from openpyxl import Workbook
+from openpyxl.workbook import Workbook
 from deportistas.forms import DeportistaFormulario
 from deportistas.models import Deportista
 
@@ -11,28 +11,28 @@ def agregar_deportista(request):
     pagina = loader.get_template('agregar_deportista.html')
     if request.method == 'GET':
         formulario = DeportistaFormulario
-    elif request.method =='POST':
+    elif request.method == 'POST':
         formulario = DeportistaFormulario(request.POST)
         if formulario.is_valid():
             formulario.save()
             return redirect('inicio')
     datos = {'formulario': formulario}
-    return HttpResponse(pagina.render(datos,request))
+    return HttpResponse(pagina.render(datos, request))
 
 
-def ver_deportista (request, idDeportista):
+def ver_deportista(request, idDeportista):
     pagina = loader.get_template('ver_deportista.html')
     deportista = get_object_or_404(Deportista, pk=idDeportista)
     mensaje = {'deportista': deportista}
     return HttpResponse(pagina.render(mensaje, request))
 
 
-def editar_deportista(request,idDeportista):
+def editar_deportista(request, idDeportista):
     pagina = loader.get_template('editar_deportista.html')
     deportista = get_object_or_404(Deportista, pk=idDeportista)
     if request.method == 'GET':
         formulario = DeportistaFormulario(instance=deportista)
-    elif request.method =='POST':
+    elif request.method == 'POST':
         formulario = DeportistaFormulario(request.POST, instance=deportista)
         if formulario.is_valid():
             formulario.save()
@@ -41,7 +41,7 @@ def editar_deportista(request,idDeportista):
     return HttpResponse(pagina.render(mensaje, request))
 
 
-def eliminar_deportista(request,idDeportista):
+def eliminar_deportista(request, idDeportista):
     deportista = get_object_or_404(Deportista, pk=idDeportista)
     if deportista:
         deportista.delete()
@@ -69,6 +69,7 @@ def generar_reporte(request):
     ws['H3'] = 'CIUDAD'
     ws['I3'] = 'SEDE'
     ws['J3'] = 'COMPETENCIA'
+    ws['k3'] = 'REPRESENTANTE'
     cont = 4
     # Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
     for deportista in deportistas:
@@ -81,12 +82,13 @@ def generar_reporte(request):
         ws.cell(row=cont, column=8).value = deportista.ciudad
         ws.cell(row=cont, column=9).value = deportista.sede.nombre
         ws.cell(row=cont, column=10).value = deportista.competencia.categoria
+        ws.cell(row=cont, column=11).value = deportista.representante.nombre_representante
         cont = cont + 1
         # Establecemos el nombre del archivo
-        nombre_archivo = "ReporteDeportistasExcel.xlsx"
-        # Definimos que el tipo de respuesta a devolver es un archivo de microsoft excel
-        response = HttpResponse(content_type="application/ms-excel")
-        contenido = "attachment; filename={0}".format(nombre_archivo)
-        response["Content-Disposition"] = contenido
-        wb.save(response)
-        return response
+    nombre_archivo = "ReporteDeportistasExcel.xlsx"
+    # Definimos que el tipo de respuesta a devolver es un archivo de microsoft excel
+    response = HttpResponse(content_type="application/ms-excel")
+    contenido = "attachment; filename={0}".format(nombre_archivo)
+    response["Content-Disposition"] = contenido
+    wb.save(response)
+    return response
