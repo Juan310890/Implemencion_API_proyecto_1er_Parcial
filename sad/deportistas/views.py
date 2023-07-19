@@ -1,10 +1,13 @@
+
 from django.forms import modelform_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from openpyxl.workbook import Workbook
 from deportistas.forms import DeportistaFormulario
-from deportistas.models import Deportista
+from deportistas.models import Deportista, Competencia
+from rest_framework import viewsets, permissions, views
+from deportistas.serializers import UserSerializer
 
 # Create your views here.
 def agregar_deportista(request):
@@ -92,3 +95,8 @@ def generar_reporte(request):
     response["Content-Disposition"] = contenido
     wb.save(response)
     return response
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = Competencia.objects.all().order_by('torneo')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
